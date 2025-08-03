@@ -1,6 +1,7 @@
 # Importa cada roteador da API 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from tournaments_api import router as tournaments_router
 from local.cbx.cbx_players import router as players_router
 from local.cbx.cbx_news import router as news_router
@@ -8,6 +9,9 @@ from local.cbx.cbx_announcements import router as announcements_router
 from rate_limiter import rate_limit_middleware
 from logger_config import logger
 from cache import cache
+
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 # Informações básicas
 app = FastAPI(
@@ -36,24 +40,34 @@ app.include_router(players_router)
 app.include_router(news_router)
 app.include_router(announcements_router)
 
-@app.get("/", tags=["Root"])
-async def root():
-    """Página inicial da API com informações básicas"""
-    return {
-        "message": "Bem-vindo à Chess Tournaments API!",
-        "version": "1.0.2",
-        "description": "API para consulta de dados de xadrez da CBX",
-        "endpoints": {
-            "tournaments": "/tournaments - Lista torneios da CBX",
-            "players": "/jogadores - Lista jogadores por UF",
-            "news": "/noticias - Últimas notícias da CBX",
-            "announcements": "/comunicados - Comunicados oficiais",
-            "docs": "/docs - Documentação interativa",
-            "redoc": "/redoc - Documentação alternativa"
-        },
-        "author": "API não oficial da CBX",
-        "status": "online"
-    }
+# @app.get("/", tags=["Root"])
+# async def root():
+#     """Página inicial da API com informações básicas"""
+#     return {
+#         "message": "Bem-vindo à Chess Tournaments API!",
+#         "version": "1.0.2",
+#         "description": "API para consulta de dados de xadrez da CBX",
+#         "endpoints": {
+#             "tournaments": "/tournaments - Lista torneios da CBX",
+#             "players": "/jogadores - Lista jogadores por UF",
+#             "news": "/noticias - Últimas notícias da CBX",
+#             "announcements": "/comunicados - Comunicados oficiais",
+#             "docs": "/docs - Documentação interativa",
+#             "redoc": "/redoc - Documentação alternativa"
+#         },
+#         "author": "API não oficial da CBX",
+#         "status": "online"
+#     }
+
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+templates = Jinja2Templates(directory="frontend")
+
+@app.get("/")
+async def home_page(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="index.html"
+    )
 
 @app.get("/health", tags=["Health"])
 async def health_check():
