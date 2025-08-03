@@ -6,8 +6,8 @@
     <title>Chess Tournaments API - Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="mobile-enhancements.css">
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('frontend', path='/mobile-enhancements.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -372,6 +372,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script src="{{ url_for('frontend', path='/script.js') }}"></script>
 </body>
 </html>
