@@ -44,6 +44,7 @@ Bem-vindo à **Chess Tournaments API**! Uma API moderna e robusta para consulta 
 - **BeautifulSoup4** - Web scraping
 - **Uvicorn** - Servidor ASGI
 - **Requests** - Cliente HTTP
+- **Jinja2** - Cliente Python
 
 ## 🏃‍♂️ Como executar
 
