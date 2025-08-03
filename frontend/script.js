@@ -1,5 +1,5 @@
 // Configuração da API
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://chess-tournaments-api-1.onrender.com/';
 
 // Estado da aplicação
 let currentSection = 'home';
@@ -463,3 +463,4 @@ setInterval(getCacheStats, 30000); // A cada 30 segundos
 
 // Auto-refresh API status
 setInterval(checkApiHealth, 60000); // A cada 1 minuto
+
