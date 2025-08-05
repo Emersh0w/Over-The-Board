@@ -351,7 +351,6 @@ function displayTournaments(tournaments) {
                     ${tournament.status ? `<span class="tournament-badge status">${tournament.status}</span>` : ''}
                 </div>
             </div>
-        </div>
             <div class="card-body">
                 <div class="tournament-details">
                     ${tournament.period ? `<p><strong>Período:</strong> ${tournament.period}</p>` : ''}

@@ -29,10 +29,14 @@
     const baseUrl = isLocalhost
       ? "http://localhost:8000"
       : "https://chess-tournaments-api-1.onrender.com";
-
+    
     apiLinks.forEach(link => {
-      const path = link.getAttribute("data-path");
-      link.href = baseUrl + path;
+        const path = link.getAttribute("data-path");
+
+        // Só define o href se houver data-path e for relativo
+        if (path && !path.startsWith("http")) {
+            link.href = baseUrl + path;
+        }
     });
   });
 </script>
@@ -368,8 +372,9 @@
                                 <a class="api-link btn btn-outline-primary" data-path="/redocs" href="#">
                                     <i class="fas fa-file-alt"></i> ReDoc
                                 </a>
-                                <a class="api-link btn btn-outline-primary" data-path="/docs" href="#">
-                                    <i class="fas fa-server"></i> API Root
+                                <a class="api-link btn btn-outline-primary" href="https://github.com/Emersh0w/Chess-Tournaments-API" target="_blank" rel="noopener noreferrer">
+                                    <i class="fa-brands fa-github"></i> GitHub
+                                </a>
                                 </a>
                             </div>
                         </div>
