@@ -1,5 +1,10 @@
 // Configuração da API
-const API_BASE_URL = 'https://chess-tournaments-api-1.onrender.com';
+const isLocalhost = window.location.hostname === 'localhost';
+
+const API_BASE_URL = isLocalhost
+  ? 'http://localhost:8000'  // ou porta que seu FastAPI usa localmente
+  : 'https://chess-tournaments-api-1.onrender.com';
+
 
 // Estado da aplicação
 let currentSection = 'home';
@@ -223,13 +228,15 @@ async function searchTournaments() {
     
     try {
         showLoading();
-        const tournaments = await makeApiCall('/tournaments', {
+        const response_tournaments = await makeApiCall('/tournaments', {
             federation: 'cbx',
             year: year,
             month: month,
             limit: limit
         });
         
+        const tournaments = response_tournaments.cbx;
+
         displayTournaments(tournaments);
         showToast(`${tournaments.length} torneios encontrados`, 'success');
     } catch (error) {
@@ -246,15 +253,17 @@ async function searchTournaments() {
 }
 
 async function searchPlayers() {
-    const uf = document.getElementById('playerUF').value;
+    const state = document.getElementById('playerUF').value;
     const pages = document.getElementById('playerPages').value;
     
     try {
         showLoading();
-        const players = await makeApiCall('/jogadores', {
-            uf: uf,
-            paginas: pages
+        const response_players = await makeApiCall('/jogadores', {
+            state: state,
+            pages: pages
         });
+
+        const players = response_players.cbx;
         
         displayPlayers(players);
         showToast(`${players.length} jogadores encontrados`, 'success');
@@ -342,6 +351,7 @@ function displayTournaments(tournaments) {
                     ${tournament.status ? `<span class="tournament-badge status">${tournament.status}</span>` : ''}
                 </div>
             </div>
+        </div>
             <div class="card-body">
                 <div class="tournament-details">
                     ${tournament.period ? `<p><strong>Período:</strong> ${tournament.period}</p>` : ''}
@@ -352,8 +362,8 @@ function displayTournaments(tournaments) {
                     ${tournament.fide_players ? `<p><strong>Jogadores FIDE:</strong> ${tournament.fide_players}</p>` : ''}
                     ${tournament.rating ? `<p><strong>Rating:</strong> ${tournament.rating}</p>` : ''}
                     ${tournament.observation ? `<p><strong>Observações:</strong> ${tournament.observation}</p>` : ''}
-                    ${tournament.regulation_link && tournament.regulation_link !== 'https://www.cbx.org.br' ? 
-                        `<p><a href="${tournament.regulation_link}" target="_blank" class="news-link">Ver Regulamento</a></p>` : ''}
+                    ${tournament.regulation && tournament.regulation !== 'https://www.cbx.org.br' ? 
+                        `<p><a href="${tournament.regulation}" target="_blank" class="news-link">Ver Regulamento</a></p>` : ''}
                 </div>
             </div>
         </div>
@@ -378,17 +388,19 @@ function displayPlayers(players) {
     const cardsHTML = players.map(player => `
         <div class="card player-card">
             <div class="card-header">
-                <div class="card-title">${player.Nome || 'Nome não disponível'}</div>
-                ${player['Rating CBX'] ? `<div class="player-rating">${player['Rating CBX']}</div>` : ''}
+                <div class="card-title">${player.name || 'Nome não disponível'} </div>
             </div>
             <div class="card-body">
                 <div class="player-details">
-                    ${player['ID CBX'] ? `<p><strong>ID CBX:</strong> ${player['ID CBX']}</p>` : ''}
-                    ${player['Rating FIDE'] ? `<p><strong>Rating FIDE:</strong> ${player['Rating FIDE']}</p>` : ''}
-                    ${player.UF ? `<p><strong>UF:</strong> ${player.UF}</p>` : ''}
-                    ${player.Cidade ? `<p><strong>Cidade:</strong> ${player.Cidade}</p>` : ''}
-                    ${player.link && player.link !== 'https://www.cbx.org.br/jogador/' ? 
-                        `<p><a href="${player.link}" target="_blank" class="news-link">Ver Perfil</a></p>` : ''}
+                    ${player.state ? `<p><strong>UF:</strong> ${player.state}</p>` : ''}
+                    ${player.birthday ? `<p><strong>Nascimento:</strong> ${player.birthday}</p>` : ''}
+                    ${player.local_id ? `<p><strong>ID CBX:</strong> ${player.local_id}</p>` : ''}
+                    ${player.fide_id ? `<p><strong>ID FIDE:</strong> ${player.fide_id}</p>` : ''}
+                    ${player.classical ? `<p><strong>Clássico:</strong> ${player.classical}</p>` : ''}
+                    ${player.rapid ? `<p><strong>Rápido:</strong> ${player.rapid}</p>` : ''}
+                    ${player.blitz ? `<p><strong>Blitz:</strong> ${player.blitz}</p>` : ''}
+                    ${player.local_profile && player.local_profile !== 'https://www.cbx.org.br/jogador/' ? 
+                        `<p><a href="${player.local_profile}" target="_blank" class="news-link">Ver Perfil</a></p>` : ''}
                 </div>
             </div>
         </div>

@@ -3,13 +3,17 @@ import requests
 from bs4 import BeautifulSoup
 from fastapi import APIRouter, Query, HTTPException
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 from utils import get_hidden_fields, safe_find, safe_link, safe_line, after_colon
+from schemas import CBXTournamentResponse
 
 router = APIRouter(prefix="/tournaments", tags=["tournaments"])
 
 BASE_URL = "https://www.cbx.org.br"
 TOURNAMENTS_URL = f"{BASE_URL}/torneios"
+
+# Abreviação para extração de HTML torneios
+CPH = "ContentPlaceHolder1_gdvMain_"
 
 def extract_pages(soup):
     pages = set()
@@ -23,7 +27,7 @@ def scrape_tournaments(
     year:  Optional[str],
     month: Optional[str],
     limit: Optional[int]
-) -> List[dict]:
+) -> CBXTournamentResponse:
     session = requests.Session()
 
     # Padrão para year e mês atual se não fornecidos
@@ -82,34 +86,35 @@ def scrape_tournaments(
         for i, table in enumerate(soup.find_all("table", class_="torneios")):
             t = {
                 "page":           page,
-                "name":           safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblNomeTorneio_{i}'),
-                "ID":             after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblIDTorneio_{i}')),
-                "status":         after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblStatus_{i}')),
-                "time":           after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblRitmo_{i}')),
-                "rating":         after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblRating_{i}')),
-                "total_players":  after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblQtJogadores_{i}')),
-                "organizer":      after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblOrganizador_{i}')),
-                "place":          after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblLocal_{i}')),
-                "fide_players":   after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblQtJogadoresFIDE_{i}')),
-                "period":         after_colon(safe_find(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblPeriodo_{i}')),
-                "observation":    after_colon(safe_line(table, 'span', id=f'ContentPlaceHolder1_gdvMain_lblObs_{i}')),
-                "regulation":     BASE_URL + safe_link(table, 'a', 'href', id=f'ContentPlaceHolder1_gdvMain_hlkTorneio_{i}')
+                "name":           safe_find(table, 'span', id=f'{CPH}lblNomeTorneio_{i}'),
+                "id":             after_colon(safe_find(table, 'span', id=f'{CPH}lblIDTorneio_{i}')),
+                "status":         after_colon(safe_find(table, 'span', id=f'{CPH}lblStatus_{i}')),
+                "time_control":   after_colon(safe_find(table, 'span', id=f'{CPH}`lblRitmo_{i}')),
+                "rating":         after_colon(safe_find(table, 'span', id=f'{CPH}lblRating_{i}')),
+                "total_players":  after_colon(safe_find(table, 'span', id=f'{CPH}lblQtJogadores_{i}')),
+                "organizer":      after_colon(safe_find(table, 'span', id=f'{CPH}lblOrganizador_{i}')),
+                "place":          after_colon(safe_find(table, 'span', id=f'{CPH}lblLocal_{i}')),
+                "fide_players":   after_colon(safe_find(table, 'span', id=f'{CPH}lblQtJogadoresFIDE_{i}')),
+                "period":         after_colon(safe_find(table, 'span', id=f'{CPH}lblPeriodo_{i}')),
+                "observation":    after_colon(safe_line(table, 'span', id=f'{CPH}lblObs_{i}')),
+                "regulation":     BASE_URL + safe_link(table, 'a', 'href', id=f'{CPH}hlkTorneio_{i}')
             }
             tournaments_list.append(t)
 
             # Checagem se atingiu o limite de torneios
             if limit and len(tournaments_list) >= limit:
-                return tournaments_list
-    return tournaments_list
+                return CBXTournamentResponse(cbx=tournaments_list)
+            
+    return CBXTournamentResponse(cbx=tournaments_list)
 
 
-@router.get("", response_model=List[dict])
+@router.get("", response_model=CBXTournamentResponse)
 def get_tournaments(
-    year:  Optional[str] = Query(None, min_length=4, max_length=4, description="Desired year, ex: 2025"),
-    month: Optional[str] = Query(None, min_length=1, max_length=2, description="Número do month (1-12), ex: 5 para Maio"),
-    limit: Optional[int] = Query(None, ge=1, description="Número máximo de pages a raspar")
+    year:  Optional[str] = Query(None, min_length=4, max_length=4, description="Desired year, eg: 2025"),
+    month: Optional[str] = Query(None, min_length=1, max_length=2, description="Number of the month (1-12), eg: 5 for May"),
+    limit: Optional[int] = Query(None, ge=1, description="Max number of tournaments to return")
 ):
     """
-    Retorna lista de torneios da CBX filtrados por year e month.
+    Returns the number of CBX tournaments filtered by year and month.
     """
     return scrape_tournaments(year, month, limit)

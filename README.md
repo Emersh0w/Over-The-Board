@@ -92,7 +92,7 @@ curl "https://chess-tournaments-api-1.onrender.com/tournaments?federation=cbx&ye
 
 ### Buscar jogadores de São Paulo
 ```bash
-curl "https://chess-tournaments-api-1.onrender.com/jogadores?uf=SP&paginas=1"
+curl "https://chess-tournaments-api-1.onrender.com/jogadores?state=SP&paginas=1"
 ```
 
 ### Últimas notícias

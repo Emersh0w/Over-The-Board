@@ -94,8 +94,14 @@ if __name__ == "__main__":
     import uvicorn
     logger.info("🚀 Iniciando Chess Tournaments API...")
     print("🚀 Iniciando Chess Tournaments API...")
-    print(f"📊 Documentação disponível em: {settings.BASE_URL}:8000/docs")
-    print(f"📋 Redoc disponível em: {settings.BASE_URL}:8000/redoc")
-    print(f"🏥 Health check em: {settings.BASE_URL}:8000/health")
-    print(f"📊 Stats do cache em: {settings.BASE_URL}:8000/cache/stats")
+    if settings.IS_RENDER == True:
+        print(f"📊 Documentação disponível em: {settings.RENDER_URL}/docs")
+        print(f"📋 Redoc disponível em: {settings.RENDER_URL}/redoc")
+        print(f"🏥 Health check em: {settings.RENDER_URL}/health")
+        print(f"📊 Stats do cache em: {settings.RENDER_URL}/cache/stats")
+    else:
+        print(f"📊 Documentação disponível em: {settings.LOCAL_URL}:8000/docs")
+        print(f"📋 Redoc disponível em: {settings.LOCAL_URL}:8000/redoc")
+        print(f"🏥 Health check em: {settings.LOCAL_URL}:8000/health")
+        print(f"📊 Stats do cache em: {settings.LOCAL_URL}:8000/cache/stats")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

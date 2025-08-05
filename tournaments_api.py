@@ -1,15 +1,17 @@
 import importlib
 from fastapi import APIRouter, Query, HTTPException
-from typing import Optional, List
+from typing import Optional
+from schemas import CBXTournamentResponse
 
 router = APIRouter(prefix="/tournaments", tags=["tournaments"])
 
-# Mapeie as federações ao módulo e à função fetch
+# Mapeamento federações -> módulo e função
 FEDERATIONS = {
     "cbx": ("local.cbx.cbx_tournaments", "get_tournaments"),
+    # add outras federações aqui...
 }
 
-@router.get("", response_model=List[dict])
+@router.get("", response_model=CBXTournamentResponse)
 def get_tournaments(
     federation: Optional[str] = Query(
         None, description="Sigla da federação (cbx, fide, uscf…). Se omitido, agrega todas."
@@ -18,7 +20,7 @@ def get_tournaments(
     month: str = Query("", max_length=2, description="Mês (1–12) ou vazio para “Todos”"),
     limit: int = Query(1, ge=1, description="Máximo de torneios a retornar")
 ):
-    results: List[dict] = []
+    results = []
 
     def call_fetch(module_path, func_name):
         mod = importlib.import_module(module_path)
@@ -29,18 +31,18 @@ def get_tournaments(
         key = federation.lower()
         if key not in FEDERATIONS:
             raise HTTPException(status_code=404, detail=f"Federação '{federation}' não suportada.")
-        module_path, func_name = FEDERATIONS[key]
-        results = call_fetch(module_path, func_name)
+        fetched = call_fetch(*FEDERATIONS[key])
+        results.extend(fetched.cbx)
     else:
         # agrega de todas as federações
         for module_path, func_name in FEDERATIONS.values():
             try:
                 fetched = call_fetch(module_path, func_name)
-                results.extend(fetched)
+                results.extend(fetched.cbx)
             except Exception:
-                # se algum scraping falhar, ignora e continua
                 continue
-        # garante que não ultrapasse limit no total
-        results = results[:limit]
 
-    return results
+    # corta pelo limite
+    results = results[:limit]
+
+    return CBXTournamentResponse(cbx=results)

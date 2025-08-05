@@ -1,17 +1,18 @@
 import re
 import requests
 from fastapi import APIRouter, HTTPException, Query
-from bs4 import BeautifulSoup
 from typing import List, Optional
+from bs4 import BeautifulSoup
 from utils import get_hidden_fields
+from schemas import CBXPlayerResponse
 
 router = APIRouter(prefix="/jogadores", tags=["jogadores"])
 
 BASE_URL = "https://www.cbx.org.br"
 URL      = f"{BASE_URL}/rating"
 
-def scrape_jogadores(
-    uf: str,
+def scrape_players(
+    state: str,
     max_pages: Optional[int] = None
 ) -> List[dict]:
     session = requests.Session()
@@ -19,21 +20,21 @@ def scrape_jogadores(
     # GET inicial
     resp = session.get(URL)
     if resp.status_code != 200:
-        raise HTTPException(status_code=resp.status_code, detail="Erro ao acessar página de jogadores")
+        raise HTTPException(status_code=resp.status_code, detail="Error accessing players page")
     soup = BeautifulSoup(resp.text, "html.parser")
     hidden = get_hidden_fields(soup)
 
     # Postback para filtrar por UF
     payload = {
         **hidden,
-        "ctl00$ContentPlaceHolder1$cboUF": uf,
+        "ctl00$ContentPlaceHolder1$cboUF": state,
         "__EVENTTARGET":   "ctl00$ContentPlaceHolder1$cboUF",
         "__EVENTARGUMENT": "",
         "ctl00$ContentPlaceHolder1$btnBuscar": "Buscar"
     }
     resp = session.post(URL, data=payload)
     if resp.status_code != 200:
-        raise HTTPException(status_code=resp.status_code, detail="Erro no filtro de UF")
+        raise HTTPException(status_code=resp.status_code, detail="Error in state filter")
     soup = BeautifulSoup(resp.text, "html.parser")
     hidden = get_hidden_fields(soup)
 
@@ -52,7 +53,7 @@ def scrape_jogadores(
         pages_to_visit = [p for p in pages_to_visit if p <= max_pages]
 
     visited = set()
-    jogadores = []
+    players = []
 
     while pages_to_visit:
         page = pages_to_visit.pop(0)
@@ -94,7 +95,21 @@ def scrape_jogadores(
             # Adiciona link do jogador
             cbx_id = rec.get("ID CBX", "")
             rec["link"] = f"{BASE_URL}/jogador/{cbx_id}" if cbx_id else ""
-            jogadores.append(rec)
+            # Criação do JSON
+            players.append ({
+                "local_id": cbx_id,
+                "name": rec.get("Nome",""),
+                "birthday": rec.get("Data Nasc.",""),
+                # Gender e Country não são fornecidos pela CBX
+                "gender": "",
+                "country": "Brasil",
+                "state": rec.get("UF",""),
+                "classical": rec.get("Clássico",""),
+                "rapid": rec.get("Rápido",""),
+                "blitz": rec.get("Blitz",""),
+                "fide_id": rec.get("ID FIDE",""),
+                "local_profile": rec["link"]
+            })
 
         # Se não limitamos, agenda novas páginas
         if not max_pages:
@@ -103,16 +118,16 @@ def scrape_jogadores(
                 if p not in visited and p not in pages_to_visit:
                     pages_to_visit.append(p)
 
-    return jogadores
+    return CBXPlayerResponse(cbx=players)
 
-@router.get("", response_model=List[dict])
-def get_jogadores(
-    uf: str = Query("SP", min_length=2, max_length=2, description="Sigla da UF (ex: SP, RJ)"),
-    paginas: Optional[int] = Query(None, ge=1, description="Número máximo de páginas a raspar")
+@router.get("", response_model=CBXPlayerResponse)
+def get_players(
+    state: str = Query("SP", min_length=2, max_length=2, description="State abbreviation (eg: SP, RJ)"),
+    pages: Optional[int] = Query(None, ge=1, description="Max number of pages to scrape")
 ):
     """
-    Retorna lista de jogadores da CBX filtrados por UF.
-    - **uf**: sigla do estado (2 caracteres)
-    - **paginas**: opcional, limita quantas páginas serão raspadas
+    Returns the list of players from CBX listed by state.
+    - **state**: First 2 letters of the states (2 characters)
+    - **pages**: optional, limits the amount of pages to be scraped
     """
-    return scrape_jogadores(uf=uf, max_pages=paginas)
+    return scrape_players(state=state, max_pages=pages)
