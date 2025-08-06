@@ -12,7 +12,7 @@ class Settings:
     FRONTEND_DIR = "frontend"
     
     # BASE URL
-    RENDER_URL = "https://chess-tournaments-api-1.onrender.com"
+    RENDER_URL = "https://otb-mmxp.onrender.com"
     LOCAL_URL = "http://localhost"
     BASE_URL = RENDER_URL if IS_RENDER else LOCAL_URL
     

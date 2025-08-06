@@ -79,25 +79,25 @@ Bem-vindo à **Over the Board**! Uma API moderna e robusta para consulta de info
 
 Após iniciar, a API estará disponível em:
 
-- **API**: https://chess-tournaments-api-1.onrender.com
-- **Documentação**: https://chess-tournaments-api-1.onrender.com/docs
-- **ReDoc**: https://chess-tournaments-api-1.onrender.com/redoc
+- **API**: https://otb-mmxp.onrender.com
+- **Documentação**: https://otb-mmxp.onrender.com/docs
+- **ReDoc**: https://otb-mmxp.onrender.com/redoc
 
 ## 📖 Exemplos de uso
 
 ### Buscar torneios de 2025
 ```bash
-curl "https://chess-tournaments-api-1.onrender.com/tournaments?federation=cbx&year=2025&month=1&limit=5"
+curl "https://otb-mmxp.onrender.com/tournaments?federation=cbx&year=2025&month=1&limit=5"
 ```
 
 ### Buscar jogadores de São Paulo
 ```bash
-curl "https://chess-tournaments-api-1.onrender.com/jogadores?state=SP&paginas=1"
+curl "https://otb-mmxp.onrender.com/jogadores?state=SP&paginas=1"
 ```
 
 ### Últimas notícias
 ```bash
-curl "https://chess-tournaments-api-1.onrender.com/noticias?paginas=1"
+curl "https://otb-mmxp.onrender.com/noticias?paginas=1"
 ```
 
 ## ⚙️ Configurações
