@@ -17,8 +17,8 @@ class Settings:
     BASE_URL = RENDER_URL if IS_RENDER else LOCAL_URL
     
     # API
-    APP_NAME = "Chess Tournaments API"
-    VERSION = "1.0.2"
+    APP_NAME = "Over the Board"
+    VERSION = "1.0.3"
     DEBUG = os.getenv("DEBUG", "false").lower() == "true"
     
     # Rate Limiting

@@ -115,9 +115,9 @@ function showToast(message, type = 'info') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <i class="fas fa-${getToastIcon(type)}"></i>
-            <span>${message}</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem;" data-i18n="">
+            <i class="fas fa-${getToastIcon(type)}" data-i18n=""></i>
+            <span data-i18n="">${message}</span>
         </div>
     `;
     
@@ -170,24 +170,39 @@ async function makeApiCall(endpoint, params = {}) {
 }
 
 // Health Check
+let currentLanguage = 'pt'; // Defina o idioma atual globalmente
+
 async function checkApiHealth() {
-    try {
-        const health = await makeApiCall('/health');
-        document.getElementById('apiStatus').textContent = 'Online';
-        document.getElementById('healthStatus').innerHTML = `
-            <span class="status-dot healthy"></span>
-            <span class="status-text">API Online</span>
-        `;
-        showToast('API está funcionando corretamente', 'success');
-    } catch (error) {
-        document.getElementById('apiStatus').textContent = 'Offline';
-        document.getElementById('healthStatus').innerHTML = `
-            <span class="status-dot error"></span>
-            <span class="status-text">API Offline</span>
-        `;
-        showToast('Erro ao conectar com a API', 'error');
-    }
+  try {
+    const health = await makeApiCall('/health');
+
+    const apiStatus = document.getElementById('apiStatus');
+    apiStatus.setAttribute('data-i18n', 'home.online');
+
+    const healthStatus = document.getElementById('healthStatus');
+    healthStatus.innerHTML = `
+      <span class="status-dot healthy"></span>
+      <span class="status-text" data-i18n="admin.statusTitle"></span>
+    `;
+
+    showToast('API está funcionando corretamente', 'success');
+  } catch (error) {
+    const apiStatus = document.getElementById('apiStatus');
+    apiStatus.setAttribute('data-i18n', 'home.offline');
+
+    const healthStatus = document.getElementById('healthStatus');
+    healthStatus.innerHTML = `
+      <span class="status-dot error"></span>
+      <span class="status-text" data-i18n="admin.statusTitle"></span>
+    `;
+
+    showToast('Erro ao conectar com a API', 'error');
+  }
+
+  // Reaplica a tradução com base no idioma atual
+  await loadLocale(currentLanguage);
 }
+
 
 // Cache Stats
 async function getCacheStats() {
@@ -242,9 +257,9 @@ async function searchTournaments() {
     } catch (error) {
         showToast('Erro ao buscar torneios', 'error');
         document.getElementById('tournamentsResults').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Erro ao carregar torneios: ${error.message}</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-exclamation-triangle" data-i18n=""></i>
+                <p data-i18n="js.tournament.error.none">Erro ao carregar torneios: ${error.message}</p>
             </div>
         `;
     } finally {
@@ -270,9 +285,9 @@ async function searchPlayers() {
     } catch (error) {
         showToast('Erro ao buscar jogadores', 'error');
         document.getElementById('playersResults').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Erro ao carregar jogadores: ${error.message}</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-exclamation-triangle" data-i18n=""></i>
+                <p data-i18n="js.player.error.none">Erro ao carregar jogadores: ${error.message}</p>
             </div>
         `;
     } finally {
@@ -294,9 +309,9 @@ async function searchNews() {
     } catch (error) {
         showToast('Erro ao buscar notícias', 'error');
         document.getElementById('newsResults').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Erro ao carregar notícias: ${error.message}</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-exclamation-triangle" data-i18n=""></i>
+                <p data-i18n="js.news.error.none">Erro ao carregar notícias: ${error.message}</p>
             </div>
         `;
     } finally {
@@ -318,9 +333,9 @@ async function searchAnnouncements() {
     } catch (error) {
         showToast('Erro ao buscar comunicados', 'error');
         document.getElementById('announcementsResults').innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>Erro ao carregar comunicados: ${error.message}</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-exclamation-triangle" data-i18n=""></i>
+                <p data-i18n="js.announcements.error.none">Erro ao carregar comunicados: ${error.message}</p>
             </div>
         `;
     } finally {
@@ -334,41 +349,41 @@ function displayTournaments(tournaments) {
     
     if (!tournaments || tournaments.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-trophy"></i>
-                <p>Nenhum torneio encontrado</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-trophy" data-i18n=""></i>
+                <p data-i18n="js.tournament.error.none">Nenhum torneio encontrado</p>
             </div>
         `;
         return;
     }
     
     const cardsHTML = tournaments.map(tournament => `
-        <div class="card tournament-card">
-            <div class="card-header">
-                <div class="card-title">${tournament.name || 'Nome não disponível'}</div>
-                <div class="tournament-meta">
-                    ${tournament.id ? `<span class="tournament-badge">ID: ${tournament.id}</span>` : ''}
-                    ${tournament.status ? `<span class="tournament-badge status">${tournament.status}</span>` : ''}
+        <div class="card tournament-card" data-i18n="">
+            <div class="card-header" data-i18n="">
+                <div class="card-title" data-i18n="js.tournament.error.name">${tournament.name || 'Nome não disponível'}</div>
+                <div class="tournament-meta" data-i18n="">
+                    ${tournament.id ? `<span class="tournament-badge" data-i18n="">ID: ${tournament.id}</span>` : ''}
+                    ${tournament.status ? `<span class="tournament-badge status" data-i18n="">${tournament.status}</span>` : ''}
                 </div>
             </div>
-            <div class="card-body">
-                <div class="tournament-details">
-                    ${tournament.period ? `<p><strong>Período:</strong> ${tournament.period}</p>` : ''}
-                    ${tournament.location ? `<p><strong>Local:</strong> ${tournament.location}</p>` : ''}
-                    ${tournament.organizer ? `<p><strong>Organizador:</strong> ${tournament.organizer}</p>` : ''}
-                    ${tournament.time_control ? `<p><strong>Ritmo:</strong> ${tournament.time_control}</p>` : ''}
-                    ${tournament.total_players ? `<p><strong>Total de Jogadores:</strong> ${tournament.total_players}</p>` : ''}
-                    ${tournament.fide_players ? `<p><strong>Jogadores FIDE:</strong> ${tournament.fide_players}</p>` : ''}
-                    ${tournament.rating ? `<p><strong>Rating:</strong> ${tournament.rating}</p>` : ''}
-                    ${tournament.observation ? `<p><strong>Observações:</strong> ${tournament.observation}</p>` : ''}
+            <div class="card-body" data-i18n="">
+                <div class="tournament-details" data-i18n="">
+                    ${tournament.period ? `<p data-i18n=""><strong data-i18n="js.tournament.period">Período:</strong> ${tournament.period}</p>` : ''}
+                    ${tournament.location ? `<p data-i18n=""><strong data-i18n="js.tournament.location">Local:</strong> ${tournament.location}</p>` : ''}
+                    ${tournament.organizer ? `<p data-i18n=""><strong data-i18n="js.tournament.organizer">Organizador:</strong> ${tournament.organizer}</p>` : ''}
+                    ${tournament.time_control ? `<p data-i18n=""><strong data-i18n="js.tournament.timeControl">Ritmo:</strong> ${tournament.time_control}</p>` : ''}
+                    ${tournament.total_players ? `<p data-i18n=""><strong data-i18n="js.tournament.totalPlayers">Total de Jogadores:</strong> ${tournament.total_players}</p>` : ''}
+                    ${tournament.fide_players ? `<p data-i18n=""><strong data-i18n="js.tournament.fidePlayers">Jogadores FIDE:</strong> ${tournament.fide_players}</p>` : ''}
+                    ${tournament.rating ? `<p data-i18n=""><strong data-i18n="js.tournament.rating">Rating:</strong> ${tournament.rating}</p>` : ''}
+                    ${tournament.observation ? `<p data-i18n=""><strong data-i18n="js.tournament.observation">Observações:</strong> ${tournament.observation}</p>` : ''}
                     ${tournament.regulation && tournament.regulation !== 'https://www.cbx.org.br' ? 
-                        `<p><a href="${tournament.regulation}" target="_blank" class="news-link">Ver Regulamento</a></p>` : ''}
+                        `<p data-i18n=""><a href="${tournament.regulation}" target="_blank" class="news-link" data-i18n="js.tournament.regulation">Ver Regulamento</a></p>` : ''}
                 </div>
             </div>
         </div>
     `).join('');
     
-    container.innerHTML = `<div class="card-grid">${cardsHTML}</div>`;
+    container.innerHTML = `<div class="card-grid" data-i18n="">${cardsHTML}</div>`;
 }
 
 function displayPlayers(players) {
@@ -376,36 +391,37 @@ function displayPlayers(players) {
     
     if (!players || players.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <p>Nenhum jogador encontrado</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-users" data-i18n=""></i>
+                <p data-i18n="js.player.error.none">Nenhum jogador encontrado</p>
             </div>
         `;
         return;
     }
     
     const cardsHTML = players.map(player => `
-        <div class="card player-card">
-            <div class="card-header">
-                <div class="card-title">${player.name || 'Nome não disponível'} </div>
+        <div class="card player-card" data-i18n="">
+            <div class="card-header" data-i18n="">
+                <div class="card-title" data-i18n="js.player.error.name">${player.name || 'Nome não disponível'} </div>
             </div>
-            <div class="card-body">
-                <div class="player-details">
-                    ${player.state ? `<p><strong>UF:</strong> ${player.state}</p>` : ''}
-                    ${player.birthday ? `<p><strong>Nascimento:</strong> ${player.birthday}</p>` : ''}
-                    ${player.local_id ? `<p><strong>ID CBX:</strong> ${player.local_id}</p>` : ''}
-                    ${player.fide_id ? `<p><strong>ID FIDE:</strong> ${player.fide_id}</p>` : ''}
-                    ${player.classical ? `<p><strong>Clássico:</strong> ${player.classical}</p>` : ''}
-                    ${player.rapid ? `<p><strong>Rápido:</strong> ${player.rapid}</p>` : ''}
-                    ${player.blitz ? `<p><strong>Blitz:</strong> ${player.blitz}</p>` : ''}
+            <div class="card-body" data-i18n="">
+                <div class="player-details" data-i18n="">
+                    ${player.country ? `<p data-i18n=""><strong data-i18n="js.player.country">País:</strong> ${player.country}</p>` : ''}
+                    ${player.state ? `<p data-i18n=""><strong data-i18n="js.player.state">UF:</strong> ${player.state}</p>` : ''}
+                    ${player.birthday ? `<p data-i18n=""><strong data-i18n="js.player.birthday">Nascimento:</strong> ${player.birthday}</p>` : ''}
+                    ${player.local_id ? `<p data-i18n=""><strong data-i18n="js.player.localId">ID CBX:</strong> ${player.local_id}</p>` : ''}
+                    ${player.fide_id ? `<p data-i18n=""><strong data-i18n="js.player.fideId">ID FIDE:</strong> ${player.fide_id}</p>` : ''}
+                    ${player.classical ? `<p data-i18n=""><strong data-i18n="js.player.classical">Clássico:</strong> ${player.classical}</p>` : ''}
+                    ${player.rapid ? `<p data-i18n=""><strong data-i18n="js.player.rapid">Rápido:</strong> ${player.rapid}</p>` : ''}
+                    ${player.blitz ? `<p data-i18n=""><strong data-i18n="js.player.blitz">Blitz:</strong> ${player.blitz}</p>` : ''}
                     ${player.local_profile && player.local_profile !== 'https://www.cbx.org.br/jogador/' ? 
-                        `<p><a href="${player.local_profile}" target="_blank" class="news-link">Ver Perfil</a></p>` : ''}
+                        `<p data-i18n=""><a href="${player.local_profile}" target="_blank" class="news-link" data-i18n="js.player.profile">Ver Perfil</a></p>` : ''}
                 </div>
             </div>
         </div>
     `).join('');
     
-    container.innerHTML = `<div class="card-grid">${cardsHTML}</div>`;
+    container.innerHTML = `<div class="card-grid" data-i18n="">${cardsHTML}</div>`;
 }
 
 function displayNews(news) {
@@ -413,27 +429,27 @@ function displayNews(news) {
     
     if (!news || news.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-newspaper"></i>
-                <p>Nenhuma notícia encontrada</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-newspaper" data-i18n=""></i>
+                <p data-i18n="js.news.error.none">Nenhuma notícia encontrada</p>
             </div>
         `;
         return;
     }
     
     const cardsHTML = news.map(item => `
-        <div class="card news-card">
-            <div class="card-header">
-                <div class="card-title">${item.titulo || 'Título não disponível'}</div>
-                ${item.data ? `<div class="news-date">${item.data}</div>` : ''}
+        <div class="card news-card" data-i18n="">
+            <div class="card-header" data-i18n="">
+                <div class="card-title" data-i18n="js.news.error.name">${item.titulo || 'Título não disponível'}</div>
+                ${item.data ? `<div class="news-date" data-i18n="">${item.data}</div>` : ''}
             </div>
-            <div class="card-body">
-                ${item.link ? `<a href="${item.link}" target="_blank" class="news-link">Ler notícia completa</a>` : ''}
+            <div class="card-body" data-i18n="">
+                ${item.link ? `<a href="${item.link}" target="_blank" class="news-link" data-i18n="js.news.link">Ler notícia completa</a>` : ''}
             </div>
         </div>
     `).join('');
     
-    container.innerHTML = `<div class="card-grid">${cardsHTML}</div>`;
+    container.innerHTML = `<div class="card-grid" data-i18n="">${cardsHTML}</div>`;
 }
 
 function displayAnnouncements(announcements) {
@@ -441,27 +457,27 @@ function displayAnnouncements(announcements) {
     
     if (!announcements || announcements.length === 0) {
         container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-bullhorn"></i>
-                <p>Nenhum comunicado encontrado</p>
+            <div class="empty-state" data-i18n="">
+                <i class="fas fa-bullhorn" data-i18n=""></i>
+                <p data-i18n="js.announcements.error.none">Nenhum comunicado encontrado</p>
             </div>
         `;
         return;
     }
     
     const cardsHTML = announcements.map(item => `
-        <div class="card announcement-card">
-            <div class="card-header">
-                <div class="card-title">${item.titulo || 'Título não disponível'}</div>
-                ${item.data ? `<div class="announcement-date">${item.data}</div>` : ''}
+        <div class="card announcement-card" data-i18n="">
+            <div class="card-header" data-i18n="">
+                <div class="card-title" data-i18n="js.announcements.error.name">${item.titulo || 'Título não disponível'}</div>
+                ${item.data ? `<div class="announcement-date" data-i18n="">${item.data}</div>` : ''}
             </div>
-            <div class="card-body">
-                ${item.link ? `<a href="${item.link}" target="_blank" class="announcement-link">Ler comunicado completo</a>` : ''}
+            <div class="card-body" data-i18n="">
+                ${item.link ? `<a href="${item.link}" target="_blank" class="announcement-link" data-i18n="js.announcements.link">Ler comunicado completo</a>` : ''}
             </div>
         </div>
     `).join('');
     
-    container.innerHTML = `<div class="card-grid">${cardsHTML}</div>`;
+    container.innerHTML = `<div class="card-grid" data-i18n="">${cardsHTML}</div>`;
 }
 
 // Admin Functions
@@ -474,5 +490,3 @@ setInterval(getCacheStats, 30000); // A cada 30 segundos
 
 // Auto-refresh API status
 setInterval(checkApiHealth, 60000); // A cada 1 minuto
-
-

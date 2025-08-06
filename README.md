@@ -1,6 +1,6 @@
-# Chess Tournaments API 🏆
+# Over the Board 🏆
 
-Bem-vindo à **Chess Tournaments API**! Uma API moderna e robusta para consulta de informações sobre xadrez da Confederação Brasileira de Xadrez (CBX).
+Bem-vindo à **Over the Board**! Uma API moderna e robusta para consulta de informações sobre xadrez da Confederação Brasileira de Xadrez (CBX).
 
 > **Nota**: Este é um projeto pessoal e não possui ligação oficial com a CBX.
 
@@ -130,7 +130,7 @@ A API suporta configuração via variáveis de ambiente:
 ## 🏗️ Arquitetura futura
 
 ```
-CHESS TOURNAMENTS API
+Over the Board
 ├── international/
 │   ├── fide/           # Torneios FIDE
 │   └── chess-results/  # Chess-results.com
@@ -162,7 +162,7 @@ Este projeto está sob a licença Apache 2.0. Veja o arquivo [LICENSE](LICENSE) 
 
 ## 🚧 Status do projeto
 
-**Versão atual**: 1.0.2  
+**Versão atual**: 1.0.3  
 **Progresso**: ~35% concluído  
 **Próxima milestone**: Integração FIDE
 

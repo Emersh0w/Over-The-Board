@@ -16,7 +16,7 @@ from fastapi import Request
 
 # Informações básicas
 app = FastAPI(
-    title="Chess Tournaments API",
+    title="Over the Board",
     version="1.0.3",
     description="API para consulta de torneios, jogadores, notícias e comunicados de xadrez da CBX",
     docs_url="/docs",
@@ -45,7 +45,7 @@ app.include_router(announcements_router)
 # async def root():
 #     """Página inicial da API com informações básicas"""
 #     return {
-#         "message": "Bem-vindo à Chess Tournaments API!",
+#         "message": "Bem-vindo à Over the Board!",
 #         "version": "1.0.3",
 #         "description": "API para consulta de dados de xadrez da CBX",
 #         "endpoints": {
@@ -92,8 +92,8 @@ async def clear_cache():
 
 if __name__ == "__main__":
     import uvicorn
-    logger.info("🚀 Iniciando Chess Tournaments API...")
-    print("🚀 Iniciando Chess Tournaments API...")
+    logger.info("🚀 Iniciando Over the Board...")
+    print("🚀 Iniciando Over the Board...")
     if settings.IS_RENDER == True:
         print(f"📊 Documentação disponível em: {settings.RENDER_URL}/docs")
         print(f"📋 Redoc disponível em: {settings.RENDER_URL}/redoc")

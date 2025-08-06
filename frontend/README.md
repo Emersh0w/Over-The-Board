@@ -1,6 +1,6 @@
-# 🎯 Chess Tournaments API - Frontend Demo
+# 🎯 Over the Board - Frontend Demo
 
-Este diretório contém um **frontend moderno e elegante** para a Chess Tournaments API.
+Este diretório contém um **frontend moderno e elegante** para a Over the Board.
 
 ## 🚀 Como executar
 
