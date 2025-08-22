@@ -1,0 +1,13 @@
+{
+  "name": "over-the-board",
+  "version": "1.0.3",
+  "description": "Frontend Over The Board",
+  "scripts": {
+    "start": "live-server", 
+    "build": "cp index.template.html index.html && sed -i 's|%%API_BASE_URL%%|$API_BASE_URL|g' index.html"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

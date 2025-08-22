@@ -145,21 +145,22 @@ async function makeApiCall(endpoint, params = {}) {
         });
 
         console.log('Making API call to:', url.toString());
-        
+
         const response = await fetch(url);
-        
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        
+
         const data = await response.json();
-        
-        document.getElementById('apiResponse').textContent = JSON.stringify(data, null, 2);
-        
+
+        const outputEl = document.getElementById('apiResponse');
+        if (outputEl) outputEl.textContent = JSON.stringify(data, null, 2);
+
         return data;
     } catch (error) {
         console.error('API Error:', error);
-        document.getElementById('apiResponse').textContent = `Erro: ${error.message}`;
+        const outputEl = document.getElementById('apiResponse');
+        if (outputEl) outputEl.textContent = `Erro: ${error.message}`;
         throw error;
     }
 }

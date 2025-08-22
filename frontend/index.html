@@ -18,33 +18,29 @@
 </head>
 <body>
 
-<script>
-  // Detecta se está local
-  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+  <!-- Define a URL da API dinamicamente -->
+  <script>
+    const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    window.API_BASE_URL = isLocalhost ? "http://localhost:8000" : "%%API_BASE_URL%%";
+  </script>
 
-  // Define a URL da API para uso no script.js
-  window.API_BASE_URL = isLocalhost
-    ? "http://localhost:8000"
-    : document.currentScript.getAttribute('data-api-base-url');
-</script>
+  <!-- Script principal -->
+  <script src="script.js"></script>
 
-<script src="script.js" data-api-base-url="%API_BASE_URL%"></script>
+  <!-- Exemplo de links dinâmicos -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const apiLinks = document.querySelectorAll(".api-link");
+      const baseUrl = window.API_BASE_URL;
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const apiLinks = document.querySelectorAll(".api-link");
-
-    // Não precisa recalcular isLocalhost aqui
-    const baseUrl = window.API_BASE_URL;
-
-    apiLinks.forEach(link => {
-      const path = link.getAttribute("data-path");
-      if (path && !path.startsWith("http")) {
-        link.href = baseUrl + path;
-      }
+      apiLinks.forEach(link => {
+        const path = link.getAttribute("data-path");
+        if (path && !path.startsWith("http")) {
+          link.href = baseUrl + path;
+        }
+      });
     });
-  });
-</script>
+  </script>
 
 
 <!-- Header -->
