@@ -89,7 +89,7 @@ def scrape_tournaments(
                 "name":           safe_find(table, 'span', id=f'{CPH}lblNomeTorneio_{i}'),
                 "id":             after_colon(safe_find(table, 'span', id=f'{CPH}lblIDTorneio_{i}')),
                 "status":         after_colon(safe_find(table, 'span', id=f'{CPH}lblStatus_{i}')),
-                "time_control":   after_colon(safe_find(table, 'span', id=f'{CPH}`lblRitmo_{i}')),
+                "time_control":   after_colon(safe_find(table, 'span', id=f'{CPH}lblRitmo_{i}')),
                 "rating":         after_colon(safe_find(table, 'span', id=f'{CPH}lblRating_{i}')),
                 "total_players":  after_colon(safe_find(table, 'span', id=f'{CPH}lblQtJogadores_{i}')),
                 "organizer":      after_colon(safe_find(table, 'span', id=f'{CPH}lblOrganizador_{i}')),

@@ -29,9 +29,9 @@ python -m SimpleHTTPServer 3000
 
 ## 🌐 Acessos
 
-- **Frontend**: https://otb-mmxp.onrender.com ou http://localhost:3000
-- **API**: https://otb-mmxp.onrender.com ou http://localhost:8000
-- **Docs**: https://otb-mmxp.onrender.com/docs ou http://localhost:8000/docs
+- **Frontend**: https://over-the-board.onrender.com ou http://localhost:3000
+- **API**: https://over-the-board.onrender.com ou http://localhost:8000
+- **Docs**: https://over-the-board.onrender.com/docs ou http://localhost:8000/docs
 
 ## ✨ Funcionalidades
 

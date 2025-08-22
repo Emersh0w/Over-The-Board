@@ -3,7 +3,7 @@ const isLocalhost = window.location.hostname === 'localhost';
 
 const API_BASE_URL = isLocalhost
   ? 'http://localhost:8000'  // ou porta que seu FastAPI usa localmente
-  : 'https://otb-mmxp.onrender.com';
+  : 'https://over-the-board.onrender.com';
 
 
 // Estado da aplicação
