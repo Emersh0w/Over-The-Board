@@ -1,9 +1,7 @@
 // Configuração da API
 const isLocalhost = window.location.hostname === 'localhost';
 
-const API_BASE_URL = isLocalhost
-  ? 'http://localhost:8000'  // ou porta que seu FastAPI usa localmente
-  : 'https://over-the-board.onrender.com';
+const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8000';
 
 
 // Estado da aplicação
