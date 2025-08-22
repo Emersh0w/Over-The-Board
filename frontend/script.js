@@ -1,7 +1,5 @@
 // Configuração da API
-const isLocalhost = window.location.hostname === 'localhost';
-
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = window.API_BASE_URL;
 
 
 // Estado da aplicação
@@ -156,7 +154,6 @@ async function makeApiCall(endpoint, params = {}) {
         
         const data = await response.json();
         
-        // Atualiza o painel admin com a resposta
         document.getElementById('apiResponse').textContent = JSON.stringify(data, null, 2);
         
         return data;
