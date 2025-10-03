@@ -1,52 +1,57 @@
-{% extends "base.html" %}
-{% block title %}Tournaments - Over The Board{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTB - Tournaments</title>
+    
+    <link rel="stylesheet" href="static/css/cards.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet" type="text/css">
+</head>
+<body>
+    
+    <h1 class="title">Torneios de Xadrez:</h1>
 
-{% block content %}
-<section id="tournaments" class="section">
-  <div class="section-header text-center mb-4">
-    <h2><i class="fas fa-trophy"></i> <span data-i18n="tournaments.title"> Chess Tournaments</span></h2>
-    <p data-i18n="tournaments.subTitle">Query tournaments by year and month</p>
-  </div>
-
-  <div class="row g-3 mb-4">
-    <div class="col-12 col-sm-6 col-md-3">
-      <label for="tournamentYear" class="form-label" data-i18n="tournaments.year">Year:</label>
-      <select id="tournamentYear" class="form-select">
-        <option value="2025" data-i18n="tournaments.year.2025">2025</option>
-        <option value="2024" data-i18n="tournaments.year.2024">2024</option>
-        <option value="2023" data-i18n="tournaments.year.2023">2023</option>
-      </select>
-    </div>
-    <div class="col-12 col-sm-6 col-md-3">
-      <label for="tournamentMonth" class="form-label" data-i18n="tournaments.month">Month:</label>
-      <select id="tournamentMonth" class="form-select">
-        <option value="" data-i18n="tournaments.month.all">All</option>
-        <!-- meses... -->
-        <option value="1" data-i18n="tournaments.month.january">January</option>
-        <!-- ...restante dos meses -->
-      </select>
-    </div>
-    <div class="col-12 col-sm-6 col-md-3">
-      <label for="tournamentLimit" class="form-label" data-i18n="tournaments.limitTitle">Limit:</label>
-      <select id="tournamentLimit" class="form-select">
-        <option value="10" data-i18n="tournaments.limit.10">10</option>
-        <option value="20" data-i18n="tournaments.limit.20">20</option>
-        <option value="50" data-i18n="tournaments.limit.50">50</option>
-        <option value="100" data-i18n="tournaments.limit.100">100</option>
-      </select>
-    </div>
-    <div class="col-12 col-sm-6 col-md-3 d-flex align-items-end">
-      <button class="btn btn-primary w-100" onclick="searchTournaments()">
-        <i class="fas fa-search"></i> <span data-i18n="tournaments.search">Search</span>
-      </button>
-    </div>
-  </div>
-
-  <div id="tournamentsResults" class="results-container">
-    <div class="empty-state text-center">
-      <i class="fas fa-trophy"></i>
-      <p data-i18n="tournaments.searchDescription">Use the filters above to search for tournaments</p>
-    </div>
-  </div>
-</section>
-{% endblock %}
+    <div id="app" class="container">
+      <div class="card-wrap" data-image="https://library.sportingnews.com/styles/crop_style_16_9_desktop_webp/s3/2024-11/Ding%20Liren%20Gukesh%20D%2011252024.jpg.webp?itok=ExRYFnSH">
+          <div class="card">
+              <div class="card-bg"></div>
+              <div class="card-info">
+                  <h2>Torneio Mundial de Xadrez 2024</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </div>
+          </div>
+      </div>
+      <div class="card-wrap" data-image="https://www.cbm.df.gov.br/wp-content/uploads/2022/06/WhatsApp-Image-2022-06-20-at-13.46.59-1.jpeg">
+          <div class="card">
+              <div class="card-bg"></div>
+              <div class="card-info">
+                  <h2>2° Torneio De Xadrez Do CBMDF</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </div>
+          </div>
+      </div>
+            <div class="card-wrap" data-image="https://eventos.maringa.com/storage/eventos/i-torneio-de-xadrez-blitz-2024-hHHD9.webp">
+          <div class="card">
+              <div class="card-bg"></div>
+              <div class="card-info">
+                  <h2>Torneio Melhores do Ano de Xadrez Rápido 2025</h2>
+                  <p>13/12/2025 - Patrocínio, MG - Brasil - Clássico 90+30 - </p>
+              </div>
+          </div>
+      </div>
+            <div class="card-wrap" data-image="https://www.canaadoscarajas.pa.gov.br/novo/wp-content/uploads/2022/05/WhatsApp-Image-2022-05-11-at-08.57.53.jpeg">
+          <div class="card">
+              <div class="card-bg"></div>
+              <div class="card-info">
+                  <h2>ABERTO ABSOLUTO DE RÁPIDO DE SÃO JOSÉ–SHOPPING CONTINUA</h2>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </div>
+          </div>
+      </div>
+      </div>
+    
+    <script src="static/js/app.js"></script>
+</body>
+</html>
