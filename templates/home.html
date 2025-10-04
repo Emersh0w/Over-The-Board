@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block head %}
+  <style>
+    .welcome {
+      text-align: center;
+      margin-top: 2rem;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="welcome">
+    <h1>Bem-vindo ao Meu App!</h1>
+    <p>Esta é a página inicial renderizada com Jinja2 + Tabler.</p>
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <h3 class="card-title">Exemplo de Card</h3>
+        <p class="text-muted">Um card simples usando Tabler.</p>
+        <a href="/sobre" class="btn btn-primary">Saiba mais</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    console.log("Home carregada com sucesso!");
+  </script>
+{% endblock %}
