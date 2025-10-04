@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Teste de UI</title>
+    
+    <style>
+        /* Estilos CSS Base para o Dashboard */
+        body {
+            font-family: "Raleway", sans-serif;
+            margin: 40px 0;
+            padding: 20px;
+            text-align: center;
+            /* Variáveis CSS padrão (serão alteradas pelo JS) */
+            --cor-fundo-principal: #BCAAA4;
+            --cor-texto-principal: #5D4037;
+            background-color: var(--cor-fundo-principal);
+            color: var(--cor-texto-principal);
+            transition: background-color 0.5s, color 0.5s; /* Transição suave de cor */
+        }
+        h1 {
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .ui-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        .ui-list li {
+            margin: 15px 0;
+            padding: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .ui-list a {
+            color: var(--cor-texto-principal);
+            text-decoration: none;
+            font-weight: 600;
+            margin-right: 20px;
+            padding: 5px 10px;
+            border: 1px solid var(--cor-texto-principal);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .ui-list a:hover {
+            background-color: var(--cor-texto-principal);
+            color: white;
+        }
+        #theme-selector {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Dashboard de Teste de UI</h1>
+        <p>Use o seletor abaixo para testar diferentes combinações de cores:</p>
+
+        <div style="margin-bottom: 30px;">
+            <label for="theme-selector" style="font-weight: 600;">Selecione o Esquema de Cores:</label>
+            <select id="theme-selector">
+                <option value="#BCAAA4-#5D4037">Padrão (Bege/Marrom)</option>
+                <option value="#0B2F44-#FFD700">Oceano (Azul Escuro/Dourado)</option>
+                <option value="#34495E-#E74C3C">Grafite (Cinza Escuro/Vermelho)</option>
+                <option value="#FFFFFF-#1A1A1A">Claro (Branco/Preto)</option>
+            </select>
+        </div>
+
+        <h2>Designs Disponíveis para Teste</h2>
+        <ul class="ui-list">
+            <li>
+                <strong>Design A (Interativo)</strong>
+                <a href="./UI_A/index.html">Ver Home</a>
+                <a href="./UI_A/tournaments.html">Ver Torneios</a>
+            </li>
+            <li>
+                <strong>Design B (Minimalista)</strong>
+                <a href="./UI_B/index.html">Ver Home</a>
+                <a href="./UI_B/tournaments.html">Ver Torneios</a>
+            </li>
+            <li>
+                <strong>Design C (Estático)</strong>
+                <a href="./UI_C/index.html">Ver Home</a>
+                <a href="./UI_C/tournaments.html">Ver Torneios</a>
+            </li>
+        </ul>
+        <p style="margin-top: 30px;">* As cores selecionadas serão mantidas ao clicar nos links.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selector = document.getElementById('theme-selector');
+
+            // Nomes das variáveis CSS
+            const VAR_FUNDO = '--cor-fundo-principal';
+            const VAR_TEXTO = '--cor-texto-principal';
+            const STORAGE_KEY = 'siteThemeColors'; 
+            const root = document.documentElement.style;
+
+            /**
+             * Aplica as cores na raiz do documento (variáveis CSS) e salva.
+             */
+            function applyTheme(fundo, texto) {
+                root.setProperty(VAR_FUNDO, fundo);
+                root.setProperty(VAR_TEXTO, texto);
+                
+                // Salva a preferência
+                localStorage.setItem(STORAGE_KEY, `${fundo}-${texto}`);
+            }
+
+            // 1. Carregar Tema Salvo ao Abrir a Página
+            const savedColors = localStorage.getItem(STORAGE_KEY);
+            if (savedColors) {
+                const [fundo, texto] = savedColors.split('-');
+                applyTheme(fundo, texto);
+                
+                // Atualiza o <select> para mostrar a opção salva
+                selector.value = savedColors;
+            }
+
+            // 2. Ouvinte de Evento para Mudança do Usuário
+            selector.addEventListener('change', (event) => {
+                const selectedValue = event.target.value;
+                const [fundo, texto] = selectedValue.split('-');
+                
+                applyTheme(fundo, texto);
+            });
+        });
+    </script>
+
+</body>
+</html>
