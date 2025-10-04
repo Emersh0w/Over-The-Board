@@ -1,145 +1,217 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Teste de UI</title>
-    
-    <style>
-        /* Estilos CSS Base para o Dashboard */
-        body {
-            font-family: "Raleway", sans-serif;
-            margin: 40px 0;
-            padding: 20px;
-            text-align: center;
-            /* Variáveis CSS padrão (serão alteradas pelo JS) */
-            --cor-fundo-principal: #BCAAA4;
-            --cor-texto-principal: #5D4037;
-            background-color: var(--cor-fundo-principal);
-            color: var(--cor-texto-principal);
-            transition: background-color 0.5s, color 0.5s; /* Transição suave de cor */
-        }
-        h1 {
-            font-weight: 700;
-            margin-bottom: 30px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-        .ui-list {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-        }
-        .ui-list li {
-            margin: 15px 0;
-            padding: 10px;
-            border-bottom: 1px dashed #ccc;
-        }
-        .ui-list a {
-            color: var(--cor-texto-principal);
-            text-decoration: none;
-            font-weight: 600;
-            margin-right: 20px;
-            padding: 5px 10px;
-            border: 1px solid var(--cor-texto-principal);
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-        .ui-list a:hover {
-            background-color: var(--cor-texto-principal);
-            color: white;
-        }
-        #theme-selector {
-            padding: 10px;
-            font-size: 1rem;
-            border-radius: 4px;
-            margin-left: 10px;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Controle de Tema — Matiz & Saturação</title>
+
+  <style>
+    :root{
+      /* variáveis originais (H S% L%) */
+      --bg-dark:    hsl(0 0% 90%);
+      --bg:         hsl(300 0% 95%);
+      --bg-light:   hsl(300 50% 100%);
+      --text:       hsl(300 0% 4%);
+      --text-muted: hsl(0 0% 28%);
+      --highlight:  hsl(300 50% 100%);
+      --border:     hsl(300 0% 50%); /* corrigido de NaN */
+      --border-muted:hsl(340 0% 62%);
+      --primary:    hsl(357 44% 32%);
+      --secondary:  hsl(183 100% 9%);
+      --danger:     hsl(9 21% 41%);
+      --warning:    hsl(52 23% 34%);
+      --success:    hsl(147 19% 36%);
+      --info:       hsl(217 22% 41%);
+    }
+
+    /* exemplo de uso das variáveis */
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, var(--bg-light), var(--bg));
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    header{
+      padding:2rem;
+      border-bottom:1px solid color-mix(in srgb, var(--border) 30%, transparent);
+      display:flex;
+      gap:1rem;
+      align-items:center;
+      justify-content:space-between;
+      background: var(--bg-dark);
+    }
+
+    .brand{
+      display:flex;
+      gap:.75rem;
+      align-items:center;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:8px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .title{ font-weight:700; font-size:1.1rem; }
+
+    main{
+      padding:2rem;
+      max-width:1100px; margin:1.5rem auto;
+    }
+
+    .controls{
+      display:flex;
+      gap:1rem;
+      flex-wrap:wrap;
+      align-items:center;
+      background: color-mix(in srgb, var(--bg) 70%, white 30%);
+      border:1px solid var(--border);
+      padding:1rem;
+      border-radius:10px;
+    }
+
+    .control {
+      display:flex;
+      flex-direction:column;
+      gap:.4rem;
+      min-width:220px;
+    }
+
+    label{
+      font-size:.85rem;
+      color:var(--text-muted);
+    }
+
+    input[type="range"]{
+      width:100%;
+      appearance:none;
+      height:8px;
+      border-radius:999px;
+      background: linear-gradient(90deg, color-mix(in srgb,var(--primary) 60%, white 40%), color-mix(in srgb,var(--secondary) 60%, white 40%));
+      outline:none;
+    }
+    .small{
+      font-size:.9rem;color:var(--text-muted)
+    }
+
+    .preview{
+      margin-top:1rem;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:1rem;
+    }
+
+    .card{
+      padding:1rem;
+      border-radius:12px;
+      border:1px solid var(--border-muted);
+      background: linear-gradient(180deg, color-mix(in srgb,var(--bg) 90%, white 10%), var(--bg-light));
+      box-shadow: 0 6px 20px -12px color-mix(in srgb,var(--text) 20%, transparent);
+    }
+    .btn{
+      display:inline-block;padding:.6rem .9rem;border-radius:8px;
+      background: linear-gradient(180deg,var(--primary), color-mix(in srgb,var(--primary) 70%, black 10%));
+      color:white;font-weight:600;border:none;cursor:pointer;
+      box-shadow:0 8px 20px -12px color-mix(in srgb,var(--primary) 60%, transparent);
+    }
+
+    footer{
+      margin-top:2rem;padding:1rem;text-align:center;color:var(--text-muted);
+    }
+
+    /* layout responsivo simples */
+    @media (max-width:600px){
+      .controls{ flex-direction:column; }
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container">
-        <h1>Dashboard de Teste de UI</h1>
-        <p>Use o seletor abaixo para testar diferentes combinações de cores:</p>
-
-        <div style="margin-bottom: 30px;">
-            <label for="theme-selector" style="font-weight: 600;">Selecione o Esquema de Cores:</label>
-            <select id="theme-selector">
-                <option value="#BCAAA4-#5D4037">Padrão (Bege/Marrom)</option>
-                <option value="#0B2F44-#FFD700">Oceano (Azul Escuro/Dourado)</option>
-                <option value="#34495E-#E74C3C">Grafite (Cinza Escuro/Vermelho)</option>
-                <option value="#FFFFFF-#1A1A1A">Claro (Branco/Preto)</option>
-            </select>
-        </div>
-
-        <h2>Designs Disponíveis para Teste</h2>
-        <ul class="ui-list">
-            <li>
-                <strong>Design A (Interativo)</strong>
-                <a href="./UI_A/index.html">Ver Home</a>
-                <a href="./UI_A/tournaments.html">Ver Torneios</a>
-            </li>
-            <li>
-                <strong>Design B (Minimalista)</strong>
-                <a href="./UI_B/index.html">Ver Home</a>
-                <a href="./UI_B/tournaments.html">Ver Torneios</a>
-            </li>
-            <li>
-                <strong>Design C (Estático)</strong>
-                <a href="./UI_C/index.html">Ver Home</a>
-                <a href="./UI_C/tournaments.html">Ver Torneios</a>
-            </li>
-        </ul>
-        <p style="margin-top: 30px;">* As cores selecionadas serão mantidas ao clicar nos links.</p>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Theme Playground</div>
+        <div class="small">Controle global de cores por Matiz & Saturação</div>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const selector = document.getElementById('theme-selector');
+    <div>
+      <button id="resetBtn" class="btn" title="Resetar tema">Reset</button>
+    </div>
+  </header>
 
-            // Nomes das variáveis CSS
-            const VAR_FUNDO = '--cor-fundo-principal';
-            const VAR_TEXTO = '--cor-texto-principal';
-            const STORAGE_KEY = 'siteThemeColors'; 
-            const root = document.documentElement.style;
+  <main>
+    <section class="controls" aria-label="Controles de tema">
+      <div class="control">
+        <label for="hueRange">Matiz (Hue) — Shift</label>
+        <input id="hueRange" type="range" min="0" max="360" value="0" />
+        <div class="small">Deslocamento de matiz global: <span id="hueVal">0</span>°</div>
+      </div>
 
-            /**
-             * Aplica as cores na raiz do documento (variáveis CSS) e salva.
-             */
-            function applyTheme(fundo, texto) {
-                root.setProperty(VAR_FUNDO, fundo);
-                root.setProperty(VAR_TEXTO, texto);
-                
-                // Salva a preferência
-                localStorage.setItem(STORAGE_KEY, `${fundo}-${texto}`);
-            }
+      <div class="control">
+        <label for="satRange">Saturação — Multiplicador</label>
+        <input id="satRange" type="range" min="0" max="200" value="100" />
+        <div class="small">Multiplicador: <span id="satVal">100</span>%</div>
+      </div>
 
-            // 1. Carregar Tema Salvo ao Abrir a Página
-            const savedColors = localStorage.getItem(STORAGE_KEY);
-            if (savedColors) {
-                const [fundo, texto] = savedColors.split('-');
-                applyTheme(fundo, texto);
-                
-                // Atualiza o <select> para mostrar a opção salva
-                selector.value = savedColors;
-            }
+      <div style="flex:1 1 200px; display:flex;align-items:center; justify-content:center;">
+        <div style="text-align:center;">
+          <strong>Preview</strong>
+          <div class="small" style="margin-top:.25rem">As alterações afetam todas as variáveis HSL e persistem entre páginas.</div>
+        </div>
+      </div>
+    </section>
 
-            // 2. Ouvinte de Evento para Mudança do Usuário
-            selector.addEventListener('change', (event) => {
-                const selectedValue = event.target.value;
-                const [fundo, texto] = selectedValue.split('-');
-                
-                applyTheme(fundo, texto);
-            });
-        });
-    </script>
+    <section class="preview" aria-label="Exemplos">
+      <article class="card">
+        <h3>Card primário</h3>
+        <p class="small">Texto normal e cores de fundo usam variáveis CSS. Botões usam var(--primary).</p>
+        <div style="margin-top:1rem;">
+          <button class="btn">Ação</button>
+          <button class="btn" style="background:linear-gradient(180deg,var(--secondary), color-mix(in srgb,var(--secondary) 70%, black 10%)); margin-left:.6rem">Secundário</button>
+        </div>
+      </article>
 
+      <article class="card">
+        <h3>Alertas & Indicadores</h3>
+        <p class="small">Danger / Warning / Success / Info</p>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+          <span class="badge" style="padding:.4rem .6rem;border-radius:8px;background:var(--danger);color:white">Danger</span>
+          <span class="badge" style="padding:.4rem .6rem;border-radius:8px;background:var(--warning);color:white">Warning</span>
+          <span class="badge" style="padding:.4rem .6rem;border-radius:8px;background:var(--success);color:white">Success</span>
+          <span class="badge" style="padding:.4rem .6rem;border-radius:8px;background:var(--info);color:white">Info</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Links para páginas</h3>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+                    <a href="/static/UI_A/tournaments_a.html" class="btn btn-link" 
+          style="padding:.4rem .6rem; border-radius:8px; background:var(--danger); color:white"> Teste A</a>
+                    <a href="/static/UI_B/tournaments_b.html" class="btn btn-link" 
+          style="padding:.4rem .6rem; border-radius:8px; background:var(--warning); color:white"> Teste B</a>
+                    <a href="/static/UI_C/tournaments_c.html" class="btn btn-link" 
+          style="padding:.4rem .6rem; border-radius:8px; background:var(--info); color:white"> Teste C</a>
+                    <a href="/static/UI_D/tournaments_d.html" class="btn btn-link" 
+          style="padding:.4rem .6rem; border-radius:8px; background:var(--success); color:white"> Teste D</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Tipografia</h3>
+        <p class="color:var(--text)">Texto normal com var(--text)</p>
+        <p style="margin-top:.5rem small;color:var(--text-muted)">Exemplo de texto mutado com var(--text-muted)</p>
+      </article>
+    </section>
+
+    <footer>
+      Inclua <code>&lt;script src="theme.js" defer&gt;&lt;/script&gt;</code> em todas as suas páginas para manter o tema sincronizado.
+    </footer>
+  </main>
+
+  <script src="theme.js" defer></script>
 </body>
 </html>
